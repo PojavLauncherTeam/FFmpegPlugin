@@ -12,6 +12,7 @@
 /captures
 /ffmpeg-kit
 /app/libs/lib
+/app/libs/libraries.jar
 .externalNativeBuild
 .cxx
 local.properties
