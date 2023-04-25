@@ -1,0 +1,13 @@
+diff --git a/scripts/android/ffmpeg.sh b/scripts/android/ffmpeg.sh
+index e2af2ac..078371a 100755
+--- a/scripts/android/ffmpeg.sh
++++ b/scripts/android/ffmpeg.sh
+@@ -446,7 +446,7 @@ fi
+   --disable-xmm-clobber-test \
+   ${DEBUG_OPTIONS} \
+   --disable-neon-clobber-test \
+-  --disable-programs \
++  --disable-ffplay \
+   --disable-postproc \
+   --disable-doc \
+   --disable-htmlpages \

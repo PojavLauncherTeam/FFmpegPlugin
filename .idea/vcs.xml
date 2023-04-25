@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/ffmpeg-kit" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ffmpeg-kit/src/cpu-features" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ffmpeg-kit/src/ffmpeg" vcs="Git" />
+  </component>
+</project>
