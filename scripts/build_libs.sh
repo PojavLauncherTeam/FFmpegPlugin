@@ -15,12 +15,9 @@ if [ ! -e ./ffmpeg-kit ]; then
   exit 1
 fi
 cd ffmpeg-kit
-#./android.sh --api-level=21
+./android.sh --api-level=21
 
 function copy_libs {
-   if [ ! -e ../app/libs/lib ]; then
-      mkdir ../app/libs/lib
-   fi
    if [ -e ../app/libs/lib/$1/ ]; then
       rm -r ../app/libs/lib/$1/*
    else
@@ -28,6 +25,14 @@ function copy_libs {
    fi
    cp -t ../app/libs/lib/$1/ prebuilt/$2/ffmpeg/bin/* prebuilt/$2/ffmpeg/lib/*
 }
+
+if [ ! -e ../app/libs ]; then
+      mkdir ../app/libs
+fi
+
+if [ ! -e ../app/libs/lib ]; then
+      mkdir ../app/libs/lib
+fi
 
 copy_libs armeabi-v7a android-arm-neon
 copy_libs arm64-v8a android-arm64
