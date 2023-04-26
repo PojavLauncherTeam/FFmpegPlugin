@@ -24,6 +24,7 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: |
+        sudo apt install nasm autogen
         ./scripts/setup_environ.sh
         ./scripts/build_libs.sh
         ./gradlew build
