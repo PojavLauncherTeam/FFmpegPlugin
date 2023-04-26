@@ -5,7 +5,14 @@ plugins {
 android {
     namespace 'net.kdt.pojavlaunch.ffmpeg'
     compileSdk 33
-
+    signingConfigs {
+        release {
+            storeFile file("rel_signature.jks")
+            storePassword System.getenv("FFMPEG_PLUGIN_KEYSTORE_PASSWORD")
+            keyAlias "key0"
+            keyPassword System.getenv("FFMPEG_PLUGIN_KEYSTORE_PASSWORD")
+        }
+    }
     defaultConfig {
         applicationId "net.kdt.pojavlaunch.ffmpeg"
         minSdk 21
@@ -16,6 +23,7 @@ android {
 
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             debuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

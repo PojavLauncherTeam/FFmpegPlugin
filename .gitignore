@@ -10,8 +10,8 @@
 .DS_Store
 /build
 /captures
-/ffmpeg-kit
-/app/libs/lib
+/ffmpeg-kit/
+/app/libs/lib/
 /app/libs/libraries.jar
 .externalNativeBuild
 .cxx

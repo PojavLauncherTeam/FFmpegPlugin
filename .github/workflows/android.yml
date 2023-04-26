@@ -10,7 +10,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      FFMPEG_PLUGIN_KEYSTORE_PASSWORD: ${{ secrets.FFMPEG_PLUGIN_KEYSTORE_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
     - name: set up JDK 11
@@ -27,4 +28,10 @@ jobs:
         sudo apt install nasm autogen
         ./scripts/setup_environ.sh
         ./scripts/build_libs.sh
-        ./gradlew build
+        ./gradlew assembleRelease
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-debug
+        path: app/build/outputs/apk/release/app-release.apk
