@@ -7,5 +7,6 @@ builds only on linux because i dont like windows
 # Also you need to install build-essential, nasm and autogen. If you encounter errors during building check build.log in the ffmpeg-kit directory and install the necessary packages
 ./scripts/setup_environ.sh
 ./scripts/build_libs.sh
-./gradlew assemble
+# To build release, edit app/build.gradle with your own signing config.
+./gradlew assembleDebug
 ```

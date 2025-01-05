@@ -1,5 +1,52 @@
+diff --git a/android/ffmpeg-kit-android-lib/src/main/cpp/fftools_ffmpeg_mux_init.c b/android/ffmpeg-kit-android-lib/src/main/cpp/fftools_ffmpeg_mux_init.c
+index 522f8b8..1ede776 100644
+--- a/android/ffmpeg-kit-android-lib/src/main/cpp/fftools_ffmpeg_mux_init.c
++++ b/android/ffmpeg-kit-android-lib/src/main/cpp/fftools_ffmpeg_mux_init.c
+@@ -284,9 +284,9 @@ static int enc_stats_init(OutputStream *ost, EncStats *es, int pre,
+     static const struct {
+         enum EncStatsType  type;
+         const char        *str;
+-        int                pre_only:1;
+-        int                post_only:1;
+-        int                need_input_data:1;
++        unsigned int                pre_only:1;
++        unsigned int                post_only:1;
++        unsigned int                need_input_data:1;
+     } fmt_specs[] = {
+         { ENC_STATS_FILE_IDX,       "fidx"                      },
+         { ENC_STATS_STREAM_IDX,     "sidx"                      },
+diff --git a/android/jni/Android.mk b/android/jni/Android.mk
+index ee65090..e98bfe2 100644
+--- a/android/jni/Android.mk
++++ b/android/jni/Android.mk
+@@ -91,9 +91,9 @@ ifeq ($(MY_ARMV7_NEON), true)
+     LOCAL_CFLAGS := $(MY_CFLAGS)
+     LOCAL_LDLIBS := $(MY_LDLIBS)
+     LOCAL_SHARED_LIBRARIES := libavcodec_neon libavfilter_neon libswscale_neon libavformat_neon libavutil_neon libswresample_neon libavdevice_neon
+-    ifeq ($(APP_STL), c++_shared)
+-        LOCAL_SHARED_LIBRARIES += c++_shared # otherwise NDK will not add the library for packaging
+-    endif
++#    ifeq ($(APP_STL), c++_shared)
++#        LOCAL_SHARED_LIBRARIES += c++_shared # otherwise NDK will not add the library for packaging
++#    endif
+     LOCAL_ARM_NEON := true
+     include $(BUILD_SHARED_LIBRARY)
+ 
+@@ -113,9 +113,9 @@ ifeq ($(MY_BUILD_GENERIC_FFMPEG_KIT), true)
+     LOCAL_CFLAGS := $(MY_CFLAGS)
+     LOCAL_LDLIBS := $(MY_LDLIBS)
+     LOCAL_SHARED_LIBRARIES := libavfilter libavformat libavcodec libavutil libswresample libavdevice libswscale
+-    ifeq ($(APP_STL), c++_shared)
+-        LOCAL_SHARED_LIBRARIES += c++_shared # otherwise NDK will not add the library for packaging
+-    endif
++#    ifeq ($(APP_STL), c++_shared)
++#        LOCAL_SHARED_LIBRARIES += c++_shared # otherwise NDK will not add the library for packaging
++#    endif
+     LOCAL_ARM_NEON := ${MY_ARM_NEON}
+     include $(BUILD_SHARED_LIBRARY)
+ 
 diff --git a/scripts/android/ffmpeg.sh b/scripts/android/ffmpeg.sh
-index e2af2ac..078371a 100755
+index 8b311fd..a127a2c 100755
 --- a/scripts/android/ffmpeg.sh
 +++ b/scripts/android/ffmpeg.sh
 @@ -446,7 +446,7 @@ fi
