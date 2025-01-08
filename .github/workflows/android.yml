@@ -29,9 +29,16 @@ jobs:
         ./scripts/setup_environ.sh
         ./scripts/build_libs.sh
         ./gradlew assembleRelease
+        ./gradlew bundleRelease
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug
+        name: app-release
         path: app/build/outputs/apk/release/app-release.apk
+
+    - name: Upload AAB
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release-aab
+        path: app/build/outputs/bundle/release/app-release.aab
