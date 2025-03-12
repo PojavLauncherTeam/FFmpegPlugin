@@ -14,18 +14,41 @@ jobs:
       FFMPEG_PLUGIN_KEYSTORE_PASSWORD: ${{ secrets.FFMPEG_PLUGIN_KEYSTORE_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
-    - name: set up JDK 11
+    
+    - name: Set up JDK 11
       uses: actions/setup-java@v3
       with:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
+    - name: Install dependencies
+      run: sudo apt install automake ant autopoint cmake build-essential libtool-bin \
+          patch pkg-config protobuf-compiler ragel subversion unzip git \
+          openjdk-8-jre openjdk-8-jdk flex python wget nasm autogen
+
+    - name: Set up Android environment
       run: |
-        sudo apt install nasm autogen
+        echo "ANDROID_SDK=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+        echo "ANDROID_NDK=$ANDROID_NDK_ROOT" >> $GITHUB_ENV
+
+    - name: Clone and Build LibVLC
+      run: |
+        git clone https://code.videolan.org/videolan/vlc-android.git
+        cd vlc-android
+        buildsystem/compile.sh -l -a all -r
+        cd ..
+
+    - name: Copy LibVLC output to app
+      run: |
+        mkdir -p app/libs
+        cp -r vlc-android/libvlc/build/outputs/aar/*.aar app/libs/
+
+    - name: Grant execute permission for Gradle
+      run: chmod +x gradlew
+
+    - name: Build FFmpeg and VLC-integrated APK
+      run: |
         ./scripts/setup_environ.sh
         ./scripts/build_libs.sh
         ./gradlew assembleRelease
