@@ -23,10 +23,8 @@ jobs:
         cache: gradle
 
     - name: Install dependencies
-      run: sudo apt install automake ant autopoint cmake build-essential libtool-bin \
-          patch pkg-config protobuf-compiler ragel subversion unzip git \
-          openjdk-8-jre openjdk-8-jdk flex python wget nasm autogen
-
+      run: sudo apt update && sudo apt install automake ant autopoint cmake build-essential libtool-bin pkg-config protobuf-compiler ragel subversion unzip git openjdk-11-jdk flex python3 wget nasm autogen patch
+      
     - name: Set up Android environment
       run: |
         echo "ANDROID_SDK=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
