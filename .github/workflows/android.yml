@@ -12,9 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FFMPEG_PLUGIN_KEYSTORE_PASSWORD: ${{ secrets.FFMPEG_PLUGIN_KEYSTORE_PASSWORD }}
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Set up JDK 11
       uses: actions/setup-java@v3
       with:
@@ -22,17 +23,28 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
+    - name: Setup Android SDK
+      uses: amyu/setup-android@v4
+
+    - name: Setup Android NDK
+      uses: nttld/setup-ndk@v1.5.0
+      with:
+        ndk-version: r25c  # Adjust based on your requirements
+
     - name: Install dependencies
-      run: sudo apt update && sudo apt install automake ant autopoint cmake build-essential libtool-bin pkg-config protobuf-compiler ragel subversion unzip git openjdk-11-jdk flex python3 wget nasm autogen patch
-      
-    - name: Set up Android environment
-      run: |
-        echo "ANDROID_SDK=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
-        echo "ANDROID_NDK=$ANDROID_NDK_ROOT" >> $GITHUB_ENV
+      run: sudo apt update && sudo apt install -y automake ant autopoint cmake build-essential libtool-bin pkg-config protobuf-compiler ragel subversion unzip git openjdk-11-jdk flex python3 wget nasm autogen patch ninja-build gettext
+
+    - name: Cache VLC source
+      uses: actions/cache@v3
+      with:
+        path: vlc-android
+        key: vlc-android-${{ runner.os }}-${{ hashFiles('**/vlc-android') }}
 
     - name: Clone and Build LibVLC
       run: |
-        git clone https://code.videolan.org/videolan/vlc-android.git
+        if [ ! -d "vlc-android" ]; then
+          git clone https://code.videolan.org/videolan/vlc-android.git
+        fi
         cd vlc-android
         buildsystem/compile.sh -l -a all -r
         cd ..
@@ -40,10 +52,23 @@ jobs:
     - name: Copy LibVLC output to app
       run: |
         mkdir -p app/libs
-        cp -r vlc-android/libvlc/build/outputs/aar/*.aar app/libs/
+        if [ -d "vlc-android/libvlc/build/outputs/aar/" ]; then
+          cp -r vlc-android/libvlc/build/outputs/aar/*.aar app/libs/
+        else
+          echo "LibVLC build output not found!" && exit 1
+        fi
 
     - name: Grant execute permission for Gradle
-      run: chmod +x gradlew
+      run: chmod +x gradlew && chmod -R +x gradle/wrapper
+
+    - name: Verify FFmpeg & VLC Setup
+      run: |
+        if [ ! -f "./scripts/setup_environ.sh" ]; then
+          echo "Error: setup_environ.sh not found!" && exit 1
+        fi
+        if [ ! -f "./scripts/build_libs.sh" ]; then
+          echo "Error: build_libs.sh not found!" && exit 1
+        fi
 
     - name: Build FFmpeg and VLC-integrated APK
       run: |
